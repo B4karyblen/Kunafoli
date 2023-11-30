@@ -5,17 +5,17 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose"
 import Thread from "../models/thread.model";
 import { FilterQuery, SortOrder } from "mongoose";
+import Community from "../models/community.model";
 
 export async function fetchUser(userId: string){
     
   try {
       connectToDB();
 
-      return await User.findOne({ id: userId })
-      /* .populate({
-          path: 'communities',
-          model: Community
-      }) */
+      return await User.findOne({ id: userId }).populate({
+        path: 'communities',
+        model: Community
+      })
   } catch (error: any) {
      throw new Error(`impossible d'afficher L'utilisateur: ${error.message}`)
   }
@@ -58,36 +58,43 @@ export async function updateUser({
 
         if(path === "/pofile/edit"){
 
-            //Revalidate a specific data associate with a specific path
-            revalidatePath(path);
+          //Revalidate a specific data associate with a specific path
+          revalidatePath(path);
         }
    } catch (error: any) {
         throw new Error(`impossible de creer/mettre a jour l'utilsateur: ${error.message} `)
    }
 }
 
-export async function fetchUserPost(userId: string){
+export async function fetchUserPosts(userId: string) {
   try {
     connectToDB();
 
-    // Trouver tous les Threads créés par l'utilisateur ayant L'Id passer en params."
-    // TODO: populate Community
-    const threads = await User.findOne({id: userId}).populate({
-      path: 'threads',
+    // Find all threads authored by the user with the given userId
+    const threads = await User.findOne({ id: userId }).populate({
+      path: "threads",
       model: Thread,
-      populate: {
-        path: 'children',
-        model: Thread,
-        populate: {
-          path: 'author',
-          model: User,
-          select: "name imageid"
-        }
-      }
-    })
+      populate: [
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+        },
+        {
+          path: "children",
+          model: Thread,
+          populate: {
+            path: "author",
+            model: User,
+            select: "name image id", // Select the "name" and "_id" fields from the "User" model
+          },
+        },
+      ],
+    });
     return threads;
-  } catch (error: any) {
-    throw new Error(`Impossible d'afficher les threads de l'utilisateur: ${error.message}`)
+  } catch (error) {
+    console.error("Error fetching user threads:", error);
+    throw error;
   }
 }
 
@@ -146,6 +153,7 @@ export async function fetchUsers({
     return { users, isNext } // Renvoie les utilisateurs récupérés avec un indicateur s'il y a plus d'utilisateurs.
 
   } catch (error: any) {
+    
       console.error("Erreur d'affichage de l'utilisateur:", error); // Affiche une erreur s'il y a un problème lors de la récupération des utilisateurs.
       throw error; // Lance une nouvelle erreur pour indiquer l'échec de la récupération des utilisateurs.
 

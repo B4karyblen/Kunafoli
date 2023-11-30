@@ -9,7 +9,7 @@ import "../globals.css"
 const inter = Inter({ subsets: ["latin"]})
 
 export const metadata: Metadata = {
-    title: "Folikan",
+    title: "Kunafoli",
     description: "Une application threads meta faite avec nextjs 13"
 }
 

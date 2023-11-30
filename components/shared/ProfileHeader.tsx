@@ -11,7 +11,7 @@ interface Props {
   type?: string;
 }
 
-const ProfileHeader = ({
+function ProfileHeader({
   accountId,
   authUserId,
   name,
@@ -19,8 +19,7 @@ const ProfileHeader = ({
   imgUrl,
   bio,
   type,
-}: Props) =>{
-
+}: Props) {
   return (
     <div className='flex w-full flex-col justify-start'>
       <div className='flex items-center justify-between'>
@@ -63,4 +62,5 @@ const ProfileHeader = ({
     </div>
   );
 }
+
 export default ProfileHeader;

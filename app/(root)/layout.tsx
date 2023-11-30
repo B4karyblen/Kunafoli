@@ -12,7 +12,7 @@ import { frFR } from "@clerk/localizations";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata  = {
-  title: "Folikan",
+  title: "KunaFoli",
   description: "Une application threads meta faite avec nextjs 13"
 }
 
@@ -30,19 +30,19 @@ export default function RootLayout({
       localization={frFR} 
     >
       <html lang="fr">
-          <body className={inter.className}>
-            <Topbar/>
+        <body className={inter.className}>
+          <Topbar/>
 
-            <main className='flex flex-row'>
-              <LeftSidebar/>
-              <section className='main-container'>
-                <div className='w-full max-w-4x1'>{children}</div>
-              </section>
-              <RightSidebar/>
-            </main>
+          <main className='flex flex-row'>
+            <LeftSidebar/>
+            <section className='main-container'>
+              <div className='w-full max-w-4x1'>{children}</div>
+            </section>
+            <RightSidebar/>
+          </main>
 
-            <Bottombar/>
-          </body>
+          <Bottombar/>
+        </body>
       </html>
     </ClerkProvider>
   )
